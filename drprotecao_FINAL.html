@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Proteção — Dashboard Executivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090c;--s1:#0f1016;--s2:#14161e;--s3:#1a1d28;
+  --bd:#22263a;--bd2:#2a2f47;
+  --gold:#e8b84b;--blue:#4a7fe0;--green:#2ec4a0;--red:#e05555;--purple:#8b6cf7;
+  --text:#dde1f0;--muted:#6b7490;--dim:#3a3f5c;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+/* HEADER */
+.hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:12px}
+.emblem{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;color:#09090c;flex-shrink:0}
+.brand{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800}
+.tagline{font-size:10px;color:var(--muted);font-family:'Space Grotesk',sans-serif;margin-top:1px;letter-spacing:1px;text-transform:uppercase}
+.hdr-date{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--muted);text-align:right}
+/* NAV */
+.nav{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 28px;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav::-webkit-scrollbar{height:2px;background:var(--bd)}
+.nav::-webkit-scrollbar-thumb{background:var(--bd2)}
+.tab{padding:11px 16px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+/* PAGES */
+.page{display:none;padding:24px 28px;max-width:1400px;margin:0 auto}
+.page.on{display:block}
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(--bd2)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--gold));border-radius:11px 11px 0 0}
+.kpi-lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.kpi-val{font-family:'Nunito',sans-serif;font-size:26px;font-weight:900;line-height:1;color:var(--kc,var(--gold))}
+.kpi-sub{margin-top:7px;font-size:11px;color:var(--muted)}
+.up{color:var(--green);font-weight:700}.dn{color:var(--red);font-weight:700}
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:20px;margin-bottom:16px}
+.card-title{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:3px}
+.card-sub{font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:.8px;text-transform:uppercase}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g2 .card{margin-bottom:0}
+/* LEGEND */
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-family:'Space Grotesk',sans-serif}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+/* TABLES */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--bd);font-weight:600;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid rgba(34,38,58,.5);color:var(--text);vertical-align:middle}
+tbody tr:hover td{background:rgba(232,184,75,.03)}
+.num{text-align:right;font-family:'Space Grotesk',sans-serif}
+.rb{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;background:var(--s3)}
+.r1{background:var(--gold)!important;color:#09090c!important}
+.r2{background:#7c828f!important;color:#09090c!important}
+.r3{background:#5c3d1e!important;color:#f5d07a!important}
+/* BAR INLINE */
+.br{display:flex;align-items:center;gap:8px}
+.br-bg{flex:1;height:3px;background:var(--bd);border-radius:2px;min-width:40px}
+.br-fill{height:100%;border-radius:2px}
+.pct{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);min-width:32px;text-align:right}
+/* HIGHLIGHT */
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.hl{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:14px 16px}
+.hl-lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.hl-val{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800}
+.hl-det{font-size:11px;color:var(--muted);margin-top:3px}
+/* BADGE */
+.cv{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-family:'Space Grotesk',sans-serif;font-weight:600}
+.cv-hi{background:rgba(46,196,160,.15);color:var(--green)}
+.cv-mid{background:rgba(232,184,75,.15);color:var(--gold)}
+.cv-lo{background:rgba(224,85,85,.15);color:var(--red)}
+/* FOOTER */
+.footer{text-align:center;padding:16px;font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--dim);letter-spacing:1px;border-top:1px solid var(--bd);margin-top:8px}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .g2{grid-template-columns:1fr}
+  .hl-grid{grid-template-columns:1fr}
+  .page{padding:14px 16px}
+  .hdr{padding:12px 16px}
+  .nav{padding:0 16px}
+}
+@media(max-width:480px){
+  .kpis{grid-template-columns:1fr}
+  .kpi-val{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="emblem">DP</div>
+    <div>
+      <div class="brand">Dr. Proteção</div>
+      <div class="tagline">Dashboard Executivo</div>
+    </div>
+  </div>
+  <div class="hdr-date" id="hdrDate"></div>
+</header>
+
+<nav class="nav">
+  <button class="tab on"  onclick="goTab('dash',this)">📊 Dashboard</button>
+  <button class="tab"     onclick="goTab('pag',this)">💰 Pagamentos</button>
+  <button class="tab"     onclick="goTab('prest',this)">🔧 Prestadores</button>
+  <button class="tab"     onclick="goTab('serv',this)">🚗 Serviços</button>
+  <button class="tab"     onclick="goTab('reg',this)">📍 Regionais</button>
+  <button class="tab"     onclick="goTab('hist',this)">📅 Histórico</button>
+</nav>
+
+<!-- ═══ DASHBOARD ═══════════════════════════════════════════ -->
+<div id="dash" class="page on">
+  <div class="kpis">
+    <div class="kpi" style="--kc:#e8b84b">
+      <div class="kpi-lbl">Total Pago 2025</div>
+      <div class="kpi-val">R$ 785,9K</div>
+      <div class="kpi-sub">2.124 atendimentos · 12 meses</div>
+    </div>
+    <div class="kpi" style="--kc:#4a7fe0">
+      <div class="kpi-lbl">Total Pago 2026</div>
+      <div class="kpi-val" style="color:#4a7fe0">R$ 240,0K</div>
+      <div class="kpi-sub">582 atendimentos · Jan–Mai</div>
+    </div>
+    <div class="kpi" style="--kc:#2ec4a0">
+      <div class="kpi-lbl">Ticket Médio 2026</div>
+      <div class="kpi-val" style="color:#2ec4a0">R$ 412</div>
+      <div class="kpi-sub"><span class="up">▲ +7,9%</span> vs 2025 (R$ 382)</div>
+    </div>
+    <div class="kpi" style="--kc:#8b6cf7">
+      <div class="kpi-lbl">Total Atendimentos</div>
+      <div class="kpi-val" style="color:#8b6cf7">2.706</div>
+      <div class="kpi-sub">2025 + 2026 combinados</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Evolução de Notas Fiscais</div>
+    <div class="card-sub">Valores mensais — controles anuais · R$</div>
+    <div class="leg">
+      <span class="leg-i"><span class="leg-dot" style="background:#5a5e72"></span>2023</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#4a7fe0"></span>2024</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#2ec4a0"></span>2025</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#e8b84b"></span>2026</span>
+    </div>
+    <canvas id="cAnual" height="90"></canvas>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Atendimentos por Regional</div>
+      <div class="card-sub">Top 8 — distribuição de volume</div>
+      <canvas id="cRegDona" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Top 5 Regionais — Valor</div>
+      <div class="card-sub">Por valor gerado · R$</div>
+      <canvas id="cRegBar" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGAMENTOS ════════════════════════════════════════== -->
+<div id="pag" class="page">
+  <div class="hl-grid">
+    <div class="hl"><div class="hl-lbl">Total 2025 (Jan–Dez)</div><div class="hl-val" style="color:#2ec4a0">R$ 785,9K</div><div class="hl-det">2.124 atendimentos · 12 meses completos</div></div>
+    <div class="hl"><div class="hl-lbl">Total 2026 (Jan–Mai)</div><div class="hl-val" style="color:#4a7fe0">R$ 240,0K</div><div class="hl-det">582 atendimentos · 5 meses</div></div>
+    <div class="hl"><div class="hl-lbl">Média Mensal 2025</div><div class="hl-val" style="color:#e8b84b">R$ 65,5K</div><div class="hl-det">vs R$ 48,0K/mês em 2026</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Comparativo Mensal 2025 × 2026</div>
+    <div class="card-sub">Valor total de serviços por mês · R$</div>
+    <div class="leg">
+      <span class="leg-i"><span class="leg-dot" style="background:#2ec4a0"></span>2025</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#e8b84b"></span>2026</span>
+    </div>
+    <canvas id="cMensal" height="90"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Detalhamento Mês a Mês</div>
+    <div class="card-sub">Comparativo de valores e atendimentos</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Mês</th><th class="num">2025 (R$)</th><th class="num">2026 (R$)</th><th class="num">Δ Valor</th><th class="num">Δ %</th><th class="num">Atend. 25</th><th class="num">Atend. 26</th></tr></thead>
+      <tbody id="tbPag"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══ PRESTADORES ══════════════════════════════════════════ -->
+<div id="prest" class="page">
+  <div class="card">
+    <div class="card-title">Ranking de Prestadores 2025</div>
+    <div class="card-sub">Por valor total de serviços pagos</div>
+    <canvas id="cPrestBar" height="140"></canvas>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Concentração de Mercado</div>
+      <div class="card-sub">Participação dos top 5 prestadores</div>
+      <canvas id="cPrestDona" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Tabela Completa — Top 15</div>
+      <div class="card-sub">Prestadores por volume 2025</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>Prestador</th><th class="num">Atend.</th><th class="num">Total R$</th><th class="num">Ticket</th><th>Part.%</th></tr></thead>
+        <tbody id="tbPrest"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVIÇOS ══════════════════════════════════════════════ -->
+<div id="serv" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Serviços 2025</div>
+      <div class="card-sub">Quantidade de atendimentos por tipo</div>
+      <canvas id="cServ25" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Serviços 2026</div>
+      <div class="card-sub">Jan–Mai 2026</div>
+      <canvas id="cServ26" height="220"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Comparativo 2025 × 2026</div>
+    <div class="card-sub">Evolução por categoria de serviço</div>
+    <div class="leg">
+      <span class="leg-i"><span class="leg-dot" style="background:#2ec4a0"></span>2025</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#e8b84b"></span>2026</span>
+    </div>
+    <canvas id="cServComp" height="80"></canvas>
+  </div>
+</div>
+
+<!-- ═══ REGIONAIS ════════════════════════════════════════════ -->
+<div id="reg" class="page">
+  <div class="kpis">
+    <div class="kpi" style="--kc:#e8b84b"><div class="kpi-lbl">Total Atendimentos</div><div class="kpi-val">1.039</div><div class="kpi-sub">20 regionais ativas</div></div>
+    <div class="kpi" style="--kc:#4a7fe0"><div class="kpi-lbl">Valor Total</div><div class="kpi-val" style="color:#4a7fe0">R$ 391K</div><div class="kpi-sub">Soma de todos atendimentos</div></div>
+    <div class="kpi" style="--kc:#2ec4a0"><div class="kpi-lbl">Conversão Média</div><div class="kpi-val" style="color:#2ec4a0">34,1%</div><div class="kpi-sub">Atendimentos / ativos</div></div>
+    <div class="kpi" style="--kc:#8b6cf7"><div class="kpi-lbl">Líder</div><div class="kpi-val" style="font-size:15px;color:#8b6cf7;margin-top:4px">DR. SEGBENS</div><div class="kpi-sub">32,3% da receita total</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Valor por Regional</div>
+      <div class="card-sub">Top 10 · R$</div>
+      <canvas id="cRegVal" height="260"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Taxa de Conversão</div>
+      <div class="card-sub">Atend. / ativos · %</div>
+      <canvas id="cRegConv" height="260"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Tabela Completa de Regionais</div>
+    <div class="card-sub">Performance detalhada</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>Regional</th><th class="num">Atend.</th><th class="num">Valor</th><th class="num">% Receita</th><th class="num">Ativos</th><th>Conversão</th></tr></thead>
+      <tbody id="tbReg"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══ HISTÓRICO ════════════════════════════════════════════ -->
+<div id="hist" class="page">
+  <div class="kpis">
+    <div class="kpi" style="--kc:#5a5e72"><div class="kpi-lbl">2023 · Parcial</div><div class="kpi-val" style="color:#5a5e72">R$ 337K</div><div class="kpi-sub">Mai–Dez · 8 meses</div></div>
+    <div class="kpi" style="--kc:#4a7fe0"><div class="kpi-lbl">2024 · Completo</div><div class="kpi-val" style="color:#4a7fe0">R$ 807K</div><div class="kpi-sub"><span class="up">▲ melhor ano</span></div></div>
+    <div class="kpi" style="--kc:#2ec4a0"><div class="kpi-lbl">2025 · Completo</div><div class="kpi-val" style="color:#2ec4a0">R$ 771K</div><div class="kpi-sub"><span class="dn">▼ −4,4%</span> vs 2024</div></div>
+    <div class="kpi" style="--kc:#e8b84b"><div class="kpi-lbl">2026 · Jan–Mai</div><div class="kpi-val">R$ 240K</div><div class="kpi-sub">Projeção anual ≈ R$ 576K</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Histórico Completo 2023–2026</div>
+    <div class="card-sub">Notas fiscais mensais · R$</div>
+    <div class="leg">
+      <span class="leg-i"><span class="leg-dot" style="background:#5a5e72"></span>2023</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#4a7fe0"></span>2024</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#2ec4a0"></span>2025</span>
+      <span class="leg-i"><span class="leg-dot" style="background:#e8b84b"></span>2026</span>
+    </div>
+    <canvas id="cHist" height="100"></canvas>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Total Anual Consolidado</div>
+      <div class="card-sub">Comparativo 2023–2026</div>
+      <canvas id="cAnualBar" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Sazonalidade</div>
+      <div class="card-sub">Distribuição mensal por ano · radar</div>
+      <canvas id="cRadar" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="footer">DR. PROTEÇÃO · DASHBOARD EXECUTIVO · CONFIDENCIAL · 2026</div>
+
+<!-- Chart.js carrega depois do HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ═══ DADOS REAIS ════════════════════════════════════════════
+const M  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MF = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const PAL = ['#e8b84b','#4a7fe0','#2ec4a0','#e05555','#8b6cf7','#f97316','#06b6d4','#ec4899','#84cc16','#14b8a6'];
+const P4  = ['#5a5e72','#4a7fe0','#2ec4a0','#e8b84b'];
+
+const NOTAS = {
+  2023:[null,null,null,null,9008.20,43922.75,30192.65,49094.68,32862.40,63018.16,54987.92,54052.48],
+  2024:[55417.74,74672.64,79873.49,61879.00,66107.75,62616.70,63686.94,66702.30,81806.63,68406.51,67474.06,58109.28],
+  2025:[74331.28,97213.97,79398.13,67235.79,71615.46,72113.29,66521.40,65302.95,58385.87,31185.67,48070.87,39860.96],
+  2026:[42656.05,48414.69,64763.13,45396.83,38791.17,null,null,null,null,null,null,null]
+};
+const PAG25 = {1:{v:99425.67,c:276},2:{v:73522.06,c:197},3:{v:67704.76,c:185},4:{v:81392.36,c:196},5:{v:65807.09,c:184},6:{v:64949.17,c:156},7:{v:59717.42,c:154},8:{v:60594.39,c:172},9:{v:39715.57,c:135},10:{v:48039.97,c:148},11:{v:49492.42,c:145},12:{v:75551.32,c:176}};
+const PAG26 = {1:{v:42656.05,c:130},2:{v:48414.69,c:136},3:{v:64763.12,c:122},4:{v:45396.83,c:133},5:{v:38791.17,c:61}};
+const PREST = [
+  {n:'MEU GUINCHO FAVORITO',v:14450.65,c:27},
+  {n:'AGUITRANS',v:12485.10,c:29},
+  {n:'FR GUINCHOS',v:11909.88,c:8},
+  {n:'VISIONARIOS GUINCHOS',v:11697.65,c:11},
+  {n:'MAYKON GUINCHO',v:9682.20,c:12},
+  {n:'DRIL GUINCHOS',v:7188.45,c:24},
+  {n:'RE GUINCHO',v:6686.28,c:5},
+  {n:'GONCALVES GUINCHO',v:6529.00,c:19},
+  {n:'IDEAL GUINCHOS',v:6171.47,c:23},
+  {n:'VISIONARIOS GUINCHOS LTDA',v:5759.08,c:2},
+  {n:'FAFAMIL GUINCHOS',v:5664.00,c:5},
+  {n:'AUTO SOCORRO CHAPOLIN',v:5500.00,c:2},
+  {n:'SOS RODOVIARIO',v:5194.00,c:3},
+  {n:'VR GUINCHOS',v:4980.23,c:3},
+  {n:'GUINCHOS BETIM',v:4418.15,c:1}
+];
+const SERV25 = [{n:'REBOQUE LEVE',c:442},{n:'GUINCHO',c:341},{n:'REBOQUE UTILITARIO',c:75},{n:'CARGA BATERIA LEVE',c:40},{n:'BATERIA',c:36},{n:'CHAVEIRO',c:35},{n:'REBOQUE PESADO',c:31},{n:'REBOQUE EXTRA PESADO',c:17},{n:'RECARGA',c:11},{n:'OUTROS',c:16}];
+const SERV26 = [{n:'REBOQUE LEVE',c:373},{n:'REBOQUE UTILITARIO',c:104},{n:'CARGA BATERIA LEVE',c:30},{n:'REBOQUE PESADO',c:22},{n:'REBOQUE EXTRA PESADO',c:12},{n:'CHAVEIRO',c:10},{n:'TROCA DE PNEU',c:6},{n:'OUTROS',c:25}];
+const REGS = [
+  {n:'DR. SEGBENS',a:395,v:126449.29,at:1007,conv:39.2},
+  {n:'REGIONAL DECARO',a:51,v:64739.70,at:238,conv:21.4},
+  {n:'BM AUTO CONSULTORIA',a:136,v:48762.86,at:539,conv:25.2},
+  {n:'ANB Davi Matos',a:138,v:37846.88,at:315,conv:43.8},
+  {n:'ABC CONSULTORIA',a:82,v:25364.64,at:302,conv:27.2},
+  {n:'DR. PROTEÇÃO',a:65,v:22754.61,at:173,conv:37.6},
+  {n:'PRIME NEGÓCIOS',a:64,v:19163.54,at:188,conv:34.0},
+  {n:'ANB CONSULT. BENEF.',a:25,v:15528.30,at:63,conv:39.7},
+  {n:'HGM',a:22,v:9283.48,at:45,conv:48.9},
+  {n:'Dr. Internos',a:11,v:7695.45,at:29,conv:37.9},
+  {n:'ALTO TIETÊ',a:22,v:5171.50,at:59,conv:37.3},
+  {n:'MCP INTERMEDIACAO',a:2,v:2877.80,at:2,conv:100.0},
+  {n:'WINNIE',a:4,v:1297.60,at:3,conv:133.3},
+  {n:'GN ASSESSORIA',a:4,v:1040.00,at:22,conv:18.2},
+  {n:'GRUPO AGRESTA',a:4,v:880.00,at:13,conv:30.8},
+  {n:'ANCHIETA CORRETORA',a:4,v:741.80,at:6,conv:66.7},
+  {n:'RJS CORRETORA',a:5,v:740.00,at:10,conv:50.0},
+  {n:'GOTRECK CAMPINAS',a:2,v:480.00,at:13,conv:15.4},
+  {n:'MMN CONSULTORIA',a:2,v:335.00,at:6,conv:33.3},
+  {n:'VIEIRA TRUCK',a:1,v:200.00,at:7,conv:14.3}
+];
+
+// ═══ UTILS ══════════════════════════════════════════════════
+Chart.defaults.color = '#6b7490';
+Chart.defaults.borderColor = '#1e2330';
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+Chart.defaults.font.size = 11;
+const GC = '#1e2330';
+const fmtK = v => v == null ? '—' : 'R$ ' + (v/1000).toFixed(1) + 'K';
+const fmt  = v => v == null ? '—' : 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+let CH = {};
+function mk(id, cfg) {
+  if (CH[id]) { CH[id].destroy(); delete CH[id]; }
+  const el = document.getElementById(id);
+  if (el) CH[id] = new Chart(el, cfg);
+}
+
+// ═══ TABS ════════════════════════════════════════════════════
+function goTab(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  el.classList.add('on');
+  const fns = {dash:bDash, pag:bPag, prest:bPrest, serv:bServ, reg:bReg, hist:bHist};
+  if (fns[id]) fns[id]();
+}
+
+// ═══ DASHBOARD ═══════════════════════════════════════════════
+function bDash() {
+  mk('cAnual',{type:'line',data:{labels:M,datasets:[2023,2024,2025,2026].map((y,i)=>({label:String(y),data:NOTAS[y],borderColor:P4[i],backgroundColor:'transparent',tension:.35,pointRadius:3,pointHoverRadius:5,borderWidth:i===3?2.5:1.5,borderDash:i===0?[4,3]:undefined,spanGaps:true}))},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtK(c.raw)}}},scales:{x:{grid:{color:GC}},y:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}}}}});
+  mk('cRegDona',{type:'doughnut',data:{labels:REGS.slice(0,8).map(r=>r.n.split(' ')[0]),datasets:[{data:REGS.slice(0,8).map(r=>r.a),backgroundColor:PAL,borderColor:'#0f1016',borderWidth:3}]},options:{responsive:true,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#6b7490',font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:c=>c.label+': '+c.raw+' atend.'}}}}});
+  mk('cRegBar',{type:'bar',data:{labels:REGS.slice(0,5).map(r=>r.n.split(' ')[0]),datasets:[{data:REGS.slice(0,5).map(r=>r.v),backgroundColor:PAL.slice(0,5),borderRadius:4,barThickness:22}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtK(c.raw)}}},scales:{x:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}},y:{grid:{display:false}}}}});
+}
+
+// ═══ PAGAMENTOS ═══════════════════════════════════════════════
+function bPag() {
+  mk('cMensal',{type:'bar',data:{labels:M,datasets:[{label:'2025',data:M.map((_,i)=>PAG25[i+1]?.v||null),backgroundColor:'rgba(46,196,160,.7)',borderRadius:4,barThickness:14},{label:'2026',data:M.map((_,i)=>PAG26[i+1]?.v||null),backgroundColor:'rgba(232,184,75,.85)',borderRadius:4,barThickness:14}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtK(c.raw)}}},scales:{x:{grid:{color:GC}},y:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}}}}});
+  const tb = document.getElementById('tbPag'); tb.innerHTML = '';
+  MF.forEach((m,i) => {
+    const v5=PAG25[i+1]?.v, v6=PAG26[i+1]?.v, c5=PAG25[i+1]?.c||0, c6=PAG26[i+1]?.c||0;
+    const dv=v5&&v6?v6-v5:null, dp=v5&&v6?(dv/v5*100):null;
+    const cl = dp===null?'':dp>=0?'up':'dn';
+    tb.innerHTML += `<tr><td style="font-weight:600">${m}</td><td class="num" style="color:#2ec4a0">${v5?fmtK(v5):'—'}</td><td class="num" style="color:#e8b84b">${v6?fmtK(v6):'—'}</td><td class="num ${cl}">${dv!=null?(dv>=0?'+':'')+fmtK(dv):'—'}</td><td class="num ${cl}">${dp!=null?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'}</td><td class="num">${c5||'—'}</td><td class="num">${c6||'—'}</td></tr>`;
+  });
+}
+
+// ═══ PRESTADORES ══════════════════════════════════════════════
+function bPrest() {
+  const top10 = PREST.slice(0,10);
+  mk('cPrestBar',{type:'bar',data:{labels:top10.map(p=>p.n.split(' ')[0]),datasets:[{data:top10.map(p=>p.v),backgroundColor:PAL,borderRadius:4,barThickness:20}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' · '+top10[c.dataIndex].c+' atend.'}}},scales:{x:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  const tot = PREST.reduce((a,p)=>a+p.v,0);
+  const top5 = PREST.slice(0,5), oth = tot - top5.reduce((a,p)=>a+p.v,0);
+  mk('cPrestDona',{type:'doughnut',data:{labels:[...top5.map(p=>p.n.split(' ')[0]),'Outros'],datasets:[{data:[...top5.map(p=>p.v),oth],backgroundColor:[...PAL.slice(0,5),'#374151'],borderColor:'#0f1016',borderWidth:3}]},options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#6b7490',font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:c=>c.label+': '+fmtK(c.raw)+' ('+((c.raw/tot)*100).toFixed(1)+'%)'}}}}});
+  const tb = document.getElementById('tbPrest'); tb.innerHTML = '';
+  PREST.forEach((p,i) => {
+    const pct = (p.v/tot*100), rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
+    tb.innerHTML += `<tr><td><span class="rb ${rc}">${i+1}</span></td><td style="font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.n}</td><td class="num">${p.c}</td><td class="num" style="color:#e8b84b">${fmt(p.v)}</td><td class="num" style="color:#6b7490">${fmt(p.v/p.c)}</td><td><div class="br"><div class="br-bg"><div class="br-fill" style="width:${Math.min(pct*4,100)}%;background:${PAL[i%10]}"></div></div><span class="pct">${pct.toFixed(1)}%</span></div></td></tr>`;
+  });
+}
+
+// ═══ SERVIÇOS ═════════════════════════════════════════════════
+function bServ() {
+  const bO = (labels,data,cols) => ({type:'bar',data:{labels,datasets:[{data,backgroundColor:cols,borderRadius:4}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:GC}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  mk('cServ25', bO(SERV25.map(s=>s.n), SERV25.map(s=>s.c), PAL));
+  mk('cServ26', bO(SERV26.map(s=>s.n), SERV26.map(s=>s.c), PAL.map(c=>c+'cc')));
+  const allN = [...new Set([...SERV25,...SERV26].map(s=>s.n))];
+  const m25 = Object.fromEntries(SERV25.map(s=>[s.n,s.c])), m26 = Object.fromEntries(SERV26.map(s=>[s.n,s.c]));
+  mk('cServComp',{type:'bar',data:{labels:allN,datasets:[{label:'2025',data:allN.map(n=>m25[n]||0),backgroundColor:'rgba(46,196,160,.7)',borderRadius:4},{label:'2026',data:allN.map(n=>m26[n]||0),backgroundColor:'rgba(232,184,75,.8)',borderRadius:4}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{color:'#6b7490',usePointStyle:true}}},scales:{x:{grid:{color:GC},ticks:{font:{size:10}}},y:{grid:{color:GC}}}}});
+}
+
+// ═══ REGIONAIS ════════════════════════════════════════════════
+function bReg() {
+  const top10 = REGS.slice(0,10);
+  mk('cRegVal',{type:'bar',data:{labels:top10.map(r=>r.n.split(' ').slice(0,2).join(' ')),datasets:[{data:top10.map(r=>r.v),backgroundColor:PAL,borderRadius:4,barThickness:18}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtK(c.raw)}}},scales:{x:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  mk('cRegConv',{type:'bar',data:{labels:top10.map(r=>r.n.split(' ').slice(0,2).join(' ')),datasets:[{data:top10.map(r=>r.conv),backgroundColor:top10.map(r=>r.conv>=40?'rgba(46,196,160,.8)':r.conv>=25?'rgba(232,184,75,.8)':'rgba(224,85,85,.8)'),borderRadius:4,barThickness:18}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.toFixed(1)+'%'}}},scales:{x:{grid:{color:GC},ticks:{callback:v=>v+'%'},max:115},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  const tot = REGS.reduce((a,r)=>a+r.v,0);
+  const tb = document.getElementById('tbReg'); tb.innerHTML = '';
+  REGS.forEach((r,i) => {
+    const ccls = r.conv>=40?'cv-hi':r.conv>=25?'cv-mid':'cv-lo', rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
+    tb.innerHTML += `<tr><td><span class="rb ${rc}">${i+1}</span></td><td style="font-size:11px;font-weight:600">${r.n}</td><td class="num">${r.a}</td><td class="num" style="color:#e8b84b">${fmtK(r.v)}</td><td class="num" style="color:${PAL[i%10]}">${(r.v/tot*100).toFixed(1)}%</td><td class="num">${r.at}</td><td><span class="cv ${ccls}">${r.conv}%</span></td></tr>`;
+  });
+}
+
+// ═══ HISTÓRICO ════════════════════════════════════════════════
+function bHist() {
+  mk('cHist',{type:'line',data:{labels:M,datasets:[2023,2024,2025,2026].map((y,i)=>({label:String(y),data:NOTAS[y],borderColor:P4[i],backgroundColor:'transparent',tension:.35,pointRadius:3,borderWidth:i===3?2.5:1.5,borderDash:i===0?[4,3]:undefined,spanGaps:true}))},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtK(c.raw)}}},scales:{x:{grid:{color:GC}},y:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}}}}});
+  const tots = [2023,2024,2025,2026].map(y=>NOTAS[y].reduce((a,v)=>a+(v||0),0));
+  mk('cAnualBar',{type:'bar',data:{labels:['2023','2024','2025','2026'],datasets:[{data:tots,backgroundColor:P4,borderRadius:7,barThickness:50}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtK(c.raw)}}},scales:{x:{grid:{display:false}},y:{grid:{color:GC},ticks:{callback:v=>fmtK(v)}}}}});
+  mk('cRadar',{type:'radar',data:{labels:M,datasets:[2024,2025,2026].map((y,i)=>({label:String(y),data:NOTAS[y].map(v=>v||null),borderColor:P4[i+1],backgroundColor:P4[i+1]+'20',pointRadius:2,borderWidth:1.5,spanGaps:true}))},options:{responsive:true,plugins:{legend:{position:'top',labels:{color:'#6b7490',font:{size:10},usePointStyle:true}}},scales:{r:{grid:{color:GC},ticks:{display:false,backdropColor:'transparent'},pointLabels:{color:'#6b7490',font:{size:10}},angleLines:{color:GC}}}}});
+}
+
+// ═══ INIT ════════════════════════════════════════════════════
+document.getElementById('hdrDate').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+bDash();
+</script>
+</body>
+</html>
